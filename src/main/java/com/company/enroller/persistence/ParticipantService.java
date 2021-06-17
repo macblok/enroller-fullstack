@@ -2,6 +2,8 @@ package com.company.enroller.persistence;
 
 import com.company.enroller.model.Participant;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -11,6 +13,9 @@ public class ParticipantService {
 
     DatabaseConnector connector;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;	//dzieki adnotacji @Autowired spring wstrzyknie BCryptPasswordEncoder z adnotacja @Bean z klasy App.java (dependency injection DI)
+    
     public ParticipantService() {
         connector = DatabaseConnector.getInstance();
     }
@@ -24,6 +29,9 @@ public class ParticipantService {
     }
 
     public Participant add(Participant participant) {
+    	String rawPassword = participant.getPassword();
+    	String encodedPassword = this.passwordEncoder.encode(rawPassword);
+    	participant.setPassword(encodedPassword);
         Transaction transaction = connector.getSession().beginTransaction();
         connector.getSession().save(participant);
         transaction.commit();
