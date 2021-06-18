@@ -9,8 +9,8 @@
     </tr>
     </thead>
     <tbody>
-    <tr v-for="meeting in meetings" :key="meeting.name">
-      <td>{{ meeting.name }}</td>
+    <tr v-for="meeting in meetings" :key="meeting.title">
+      <td>{{ meeting.title }}</td>
       <td>{{ meeting.description }}</td>
       <td>
         <ul v-if="meeting.participants">
@@ -20,7 +20,7 @@
         </ul>
       </td>
       <td style="text-align: right; min-width: 400px">
-        <button v-if="meeting.participants.indexOf(username) < 0" class="button-outline"
+        <button v-if="meeting.participants.indexOf('username') < 0" class="button-outline"
                 @click="$emit('attend', meeting)">
           Zapisz się
         </button>
