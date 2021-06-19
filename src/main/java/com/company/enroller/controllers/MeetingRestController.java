@@ -34,11 +34,6 @@ public class MeetingRestController {
 
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public ResponseEntity<?> createMeeting(@RequestBody Meeting meeting) {
-		if (meetingService.findById(meeting.getId()) != null) {
-			return new ResponseEntity<String>(
-					"Unable to create. Meeting with Id " + meeting.getId() + " already exists", HttpStatus.CONFLICT);
-
-		}
 
 		meetingService.create(meeting);
 		return new ResponseEntity<Meeting>(meeting, HttpStatus.CREATED);
@@ -49,11 +44,36 @@ public class MeetingRestController {
 
 	public ResponseEntity<?> deleteMeeting(@PathVariable("id") long id) {
 		Meeting meeting = meetingService.findById(id);
-		if (meeting == null) {
-			return new ResponseEntity("Unable to delete. Meeting with given id doesn't exist.", HttpStatus.NOT_FOUND);
-		}
+
 		meetingService.delete(meeting);
 		return new ResponseEntity<Meeting>(HttpStatus.NO_CONTENT);
+	}
+
+	@RequestMapping(value = "/{id}/participants/{login}", method = RequestMethod.POST)
+
+	public ResponseEntity<?> addMeetingParticipant(@PathVariable("id") long id, @PathVariable("login") String login) {
+		Meeting meeting = meetingService.findById(id);
+
+		Participant participant = participantService.findByLogin(login);
+
+		meeting.addParticipant(participant);
+		meetingService.update(meeting);
+		return new ResponseEntity<Meeting>(meeting, HttpStatus.OK);
+
+	}
+
+	@RequestMapping(value = "/{id}/participants/{login}", method = RequestMethod.DELETE)
+
+	public ResponseEntity<?> removeMeetingParticipant(@PathVariable("id") long id,
+			@PathVariable("login") String login) {
+		Meeting meeting = meetingService.findById(id);
+
+		Participant participant = participantService.findByLogin(login);
+
+		meeting.removeParticipant(participant);
+		meetingService.update(meeting);
+		return new ResponseEntity<Meeting>(meeting, HttpStatus.OK);
+
 	}
 	
 }

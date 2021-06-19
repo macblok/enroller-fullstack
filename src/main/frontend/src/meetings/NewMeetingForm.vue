@@ -5,6 +5,8 @@
       <label>Nazwa</label>
       <input type="text" v-model="newMeeting.title" />
       <label>Opis</label>
+      <label>Data</label>
+      <input type="date" v-model="newMeeting.date">
       <textarea v-model="newMeeting.description"></textarea>
       <button>Dodaj</button>
       <span class="error" v-if="error">Spotkanie musi mieć nazwę!</span>
