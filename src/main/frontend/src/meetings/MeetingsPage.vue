@@ -31,39 +31,36 @@ export default {
   },
   methods: {
     addNewMeeting(meeting) {
-      this.$http.post("meetings", meeting).then(() =>
-        this.$http.get("meetings").then(response => {
-          this.meetings = response.body;
-        })
-      );
+      this.$http.post("meetings", meeting).then(() => {
+        this.listMeetings();
+      });
     },
     addMeetingParticipant(meeting) {
       var id = meeting.id;
       this.$http
         .post(`meetings/${id}/participants/${this.username}`, meeting)
-        .then(() =>
-          this.$http.get("meetings").then(response => {
-            this.meetings = response.body;
-          })
-        );
+        .then(() => {
+          this.listMeetings();
+        });
     },
     removeMeetingParticipant(meeting) {
       var id = meeting.id;
       this.$http
         .delete(`meetings/${id}/participants/${this.username}`, meeting)
-        .then(() =>
-          this.$http.get("meetings").then(response => {
-            this.meetings = response.body;
-          })
-        );
+        .then(() => {
+          this.listMeetings();
+        });
     },
     deleteMeeting(meeting) {
       var id = meeting.id;
-      this.$http.delete(`meetings/${id}`, meeting).then(() =>
-        this.$http.get("meetings").then(response => {
-          this.meetings = response.body;
-        })
-      );
+      this.$http.delete(`meetings/${id}`, meeting).then(() => {
+        this.listMeetings();
+      });
+    },
+    listMeetings() {
+      this.meetings = this.$http.get("meetings").then(response => {
+        this.meetings = response.body;
+      });
     }
   }
 };
